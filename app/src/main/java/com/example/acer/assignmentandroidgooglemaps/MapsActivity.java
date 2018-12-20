@@ -1,6 +1,7 @@
 package com.example.acer.assignmentandroidgooglemaps;
 
 import android.Manifest;
+import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -33,6 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
 
         try {
             if (ActivityCompat.checkSelfPermission(this, mPermission)
@@ -59,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 gps = new com.example.acer.assignmentandroidgooglemaps.GPSTracker(MapsActivity.this);
 
                 // check if GPS enabled
-                if(gps.canGetLocation()){
+                if (gps.canGetLocation()) {
 
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
@@ -67,7 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Toast.makeText(getApplicationContext(), "Lokasi anda ialah - \nLatitud: "
                             + latitude + "\nLongitud: " + longitude, Toast.LENGTH_LONG).show();
                     ShowMap();
-                }else{
+                } else {
                     // can't get location
                     // GPS or Network is not enabled
                     // Ask user to enable GPS/network in settings
@@ -75,6 +79,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+
     }
 
     public void ShowMap() {
@@ -101,10 +107,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+
         // Add a marker in current location and move the camera
         LatLng mylocation = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(mylocation).title("Anda di sini :)"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 15));
+
+        Circle circle = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(latitude, longitude))
+                .radius(600)
+                .strokeColor(Color.RED)
+                .fillColor(Color.TRANSPARENT));
 
 
     }
